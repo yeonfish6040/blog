@@ -42,7 +42,7 @@ pipeline {
                         docker stop blog || true
                         docker rm blog || true
                         docker pull ghcr.io/$username/blog
-                        docker run -it -d --name blog --restart always -p 9007:3000 ghcr.io/$username/blog
+                        docker run -it -d --name blog --restart always -p 9007:80 ghcr.io/$username/blog
                         """
                     }
                 }
@@ -51,7 +51,7 @@ pipeline {
     }
 
     post {
-        always {    
+        always {
             cleanWs()
         }
     }
