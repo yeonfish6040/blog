@@ -4,11 +4,11 @@ description: "the cicd solution for ctfd"
 published: 2025-03-21
 tags: [cicd, ctf]
 category: developing
-draft: true
+draft: false
 ---
 
 ::github{repo="DIMI-CTF/CTFdX"}
-:::note
+:::important
 본 글은 2025년도에 한국디지털미디어고등학교의 정보보안 동아리의 신입생 ctf중 테스트되었고,
 그에 기반한 실제 데이터를 이용하여 작성되었음을 밝힌다.
 :::
@@ -31,7 +31,7 @@ ctf는 capture the flag의 약자로, 운영진이 여러 해킹 문제를 출�
 
 &nbsp;
 
-# 개발
+# Deploy Flow
 ## ctfd 구성 설정
 가장 먼저 생각한 것은 당연히 ctfd api였다. api-docs가 있어서 비교적 사용하기 쉬웠지만, api-docs에 없는 엔드포인트와 일부 중요한 엔드포인트에는 payload 형식이 없었다.
 그래서 테스트용으로 ctfd 서버를 열어 직접 프론트엔드에서 개발자 도구를 사용하여 엔드포인트와 페이로드 형식을 땄다.
@@ -124,12 +124,44 @@ DOCKER_COMMAND=
 DOCKER_LOCATION=
 ```
 
-## 문제 패키징
-일단, 굳이 출제자가 for_organization, for_user 파일을 따로 생성하여서 업로드할 필요가 없도록, 깃허브에는 문제 원본을 올리고, cicd 시스템이 따로 유저용을 패키징하도록 했다.\
+## 문제 불러오기
+github에서 레포를 다운로드하기 위해서 github에서 제공하는 api를 사용했다.
+flag까지 포함되어있는 ctf 문제들이기 때문에 당연히 private repo일 것이니, github token도 env로 받아서 가져온다.
+```typescript
+const githubReq = new RequestHelper("https://api.github.com/repos/DIMI-CTF/2025_freshman_ctf");
+if (process.env.GITHUB_TOKEN) githubReq.setBearerAuth(process.env.GITHUB_TOKEN);
+// ...
+const repo_download_res = await githubReq.get("/zipball", null, path.join(__dirname, "./repo.zip"));
+if (!repo_download_res.ok) throw new Error("Cannot download repository.");
+```
 
-하지만 여기서 문제가 발생한다. 위의 설정 파일에 redacted_file을 실수로 다른 것으로 설정했을때, ctfd 서버에 올라갈 문제 파일을 출제가가 검수할 수 없다. 이 문제를 완화하기 위해서 문제 전체에 대한 플래그 검사 로직을 추가하였다.\
+## 플래그 제거
+일단, 굳이 출제자가 for_organization, for_user 파일을 따로 생성하여서 업로드할 필요가 없도록, 깃허브에는 문제 원본을 올리고, cicd 시스템이 따로 유저용을 패키징하도록 했다.
 
-`problem_deployer.ts 中`
+그래서 플래그를 유저에게 노출시키지 않기 위해서, 유저에게 제공되는 파일에는 flag를 제외한다.
+
+`problem_deployer.ts` 中
+```typescript
+// replace REDACTED files
+STATE.data.step = "replacing redacted files";
+
+const redacted = config("REDACTED_FILE", true);
+fs.rmSync(path.join(packaging_dir, file, ".ctfdx.cfg"), {recursive: true, force: true});
+if (redacted) {
+  if (typeof redacted === "string")
+    fs.writeFileSync(path.join(packaging_dir, file, redacted), "[REDACTED]");
+  else {
+    for (let j = 0; j < redacted.length; j++) {
+      fs.writeFileSync(path.join(packaging_dir, file, redacted[j]), "[REDACTED]");
+    }
+  }
+}
+```
+
+## 플래그 검사
+하지만 여기서 문제가 발생한다. 위의 설정 파일에 redacted_file을 실수로 다른 것으로 설정했을때, ctfd 서버에 올라갈 문제 파일을 출제가가 검수할 수 없다. 이 문제를 완화하기 위해서 문제 전체에 대한 플래그 검사 로직을 추가하였다.
+
+`problem_deployer.ts` 中
 ```typescript
 const searchFlag = (dir, flag, safes = [], replace) => {
   // flag = /^.+\{(?<target>.+)}$/.exec(flag).groups.target || flag;
@@ -165,3 +197,176 @@ const searchFlag = (dir, flag, safes = [], replace) => {
 ```
 실제로 이러한 플래그 검사 기능이 작동하여 불상사를 막은 사례가 다수 있었다.
 ![hardcoded_flag.png](hardcoded_flag.png)
+
+## 문제 등록/수정
+ctfd에 문제를 업로드할때, 이미 등록이 되어있다면 해당 문제를 새로 등록하는 것이 아니라, patch를 통하여 수정해야한다.
+이미 업로드된 문제를 어떤 문제인지 식별하기 위해서 문제 폴더 이름을 sha256으로 해싱한 값을 문제 tag에 넣어 해당 tag값을 비교하게 하였다. 
+
+`problem_deployer.ts` 中
+```typescript
+// create or modify challenge
+STATE.data.step = "creating/patching problem to ctfd";
+
+let challenge_id = "";
+const exists = existing_problems.find((e) => e.tags.find((tag) => tag.value === `ctfdx_${sha256_file}`));
+if (exists) {
+    challenge_id = exists.id;
+    await ctfdReq.patch(`/challenges/${challenge_id}`, register_config);
+    const get_flag_res = await ctfdReq.get(`/flags?challenge_id=${challenge_id}`);
+    if (get_flag_res.json.data.length === 0) {
+      await ctfdReq.post("/flags", {challenge: challenge_id, content: config("FLAG"), data: "", type: "static"});
+    } else {
+      await ctfdReq.patch(`/flags/${get_flag_res.json.data[0].id}`, {
+        challenge: challenge_id,
+        content: config("FLAG"),
+        data: "",
+        type: "static"
+      });
+    }
+    const challenge_tags = (await ctfdReq.get(`/challenges/${challenge_id}/tags`)).json.data;
+    challenge_tags.forEach((tag) => {
+      ctfdReq.delete(`/tags/${tag.id}`);
+    });
+    await ctfdReq.post("/tags", {challenge: challenge_id, value: `difficulty: ${difficulty}`});
+    await ctfdReq.post("/tags", {challenge: challenge_id, value: `ctfdx_${sha256_file}`});
+} else {
+    challenge_id = (await ctfdReq.post("/challenges", register_config)).json.data.id;
+    await ctfdReq.post("/tags", {challenge: challenge_id, value: `difficulty: ${difficulty}`});
+    await ctfdReq.post("/tags", {challenge: challenge_id, value: `ctfdx_${sha256_file}`});
+    await ctfdReq.post("/flags", {challenge: challenge_id, content: config("FLAG"), data: "", type: "static"});
+}
+```
+
+## for_user 파일 업로드
+파일을 업로드할떄는 multipart/form-data 형식으로 파일을 전송해야하는데, 직접만든 라이브러리인 webhtools의 RequestHelper에서는 해당 기능을 지원하지 않는다. 곧 지원하게 만들 것인데, 결국 아직은 지원하지 않는다는 의미여서
+form-data라는 라이브러리의 힘을 빌렸다.
+```typescript
+STATE.data.step = "uploading for user file to ctfd";
+
+const challenge_files = (await ctfdReq.get(`/challenges/${challenge_id}/files`)).json.data;
+challenge_files.forEach((file) => {
+  ctfdReq.delete(`/files/${file.id}`);
+});
+if ((config("POST_FILE_FOR_USER") || "true") === "true") {
+  // req helper not work!
+  const formData = new FormData();
+  formData.append("type", "challenge");
+  formData.append("challenge_id", challenge_id);
+  formData.append("file", fs.createReadStream(path.join(for_user_dir, `${file}.zip`)), `${encodeURIComponent(file)}.zip`);
+  formData.submit({
+    method: "POST",
+    headers: {
+      "Authorization": `Token ${process.env.CTFD_TOKEN}`,
+      ...formData.getHeaders(),
+    },
+    protocol: process.env.CTFD_URI.split("//")[0],
+    host: process.env.CTFD_URI.split("//")[1].split(":")[0],
+    port: process.env.CTFD_URI.split("//")[1].split(":")[1],
+    path: "/api/v1/files"
+  });
+}
+```
+
+:::note
+전체적으로 무언가를 업로드할때는, 상태관리를 위해서 이전에 업로드했던 것들을 삭제한다. 
+파일의 경우에는 파일을, 태그에 경우에는 태그를, 플래그의 경우에는 플래그를 삭제한다음에 다시 업로드한다.
+:::
+
+# Features
+## 문제 업로드 기능
+앞에서 다뤘듯, 가장 기본적인 기능이자, 이 프로젝트의 핵심이다. 깃허브에서 문제파일들을 불러와, ctfd에 패키징해서 업로드한다.
+
+## Github Webhook
+깃허브 웹훅을 통해 자동으로 배포가 트리거된다. 아직 인증이 적용되지않아 취약하다. 개선 예정이다.
+
+```typescript
+const webhookListener = new WebhookListener(3000);
+webhookListener.set("/deploy", async (req) => {
+  const body = JSON.parse(decodeURIComponent(req.body.toString()).replace("payload=", ""));
+
+  const embed = new EmbedManager();
+  embed.setTitle("Deploy triggered");
+  embed.setURL(body.compare);
+  embed.setAuthor({ name: body.sender.login, iconURL: body.sender.avatar_url, url: body.sender.url });
+  embed.setDescription("By github webhook.");
+  embed.addFields({ name: "commits", value: body.commits.map((c) => `[${(c.message.replace(/\+/g, ' '))}](${c.url})`).join("\n")});
+  embed.setFooter({ text: `Triggered at ${new Date()}` });
+  embed.setColor("Aqua");
+  await discord_client.channels.cache.get(discord_log_channel).send({ embeds: [embed] });
+  try {
+    await deploy();
+  }catch (e) {
+    console.error(e);
+    await sendError("automatic", e);
+
+    STATE.state = "error";
+    STATE.data.detail = "Error occurred during deploying. Waiting for next deploy.";
+    STATE.data.target = null;
+    STATE.data.step = null;
+  }
+  return 200;
+});
+```
+![img_2.png](img_2.png)
+
+## 난이도별 점수설정
+```typescript
+const SCORES = {
+  init: {
+    superhard: 3000,
+    hard: 2000,
+    medium: 1500,
+    easy: 1000,
+  },
+  low: {
+    superhard: 2000,
+    hard: 1000,
+    medium: 500,
+    easy: 100,
+  }
+}
+```
+이런식으로 문제 난이도별로 점수를 설정하여 간편하게 사용할 수 있다. 이것에 구애받지 않고 각 .ctfdx.cfg에 직접 점수를 입력할 수도 있다.
+
+## 지연 배포
+특정 문제의 배포를 어떤 시간 후로 설정한다. 특정시간에 문제를 공개한다거나 특정 시간 후에 문제를 수정할때 요긴하게 쓰인다.
+```dotenv
+DEPLOY_AFTER=2025-03-08T18:00
+```
+```typescript
+setInterval(async () => {
+  if (STATE.state === "running") return;
+  if (deploy_reservation_generated.some(drg => isAfter(drg))) {
+    const embed = new EmbedManager();
+    embed.setTitle("Delayed Deploy triggered");
+    embed.setFooter({ text: `Triggered at ${new Date()}` });
+    embed.setColor("Aqua");
+    await discord_client.channels.cache.get(discord_log_channel).send({ embeds: [embed] });
+    await deploy();
+  }
+}, 10000);
+```
+![img.png](img.png)
+
+## 도커 자동 빌드
+문제가 container 형식이라면 도커파일을 이용해서 자동으로 빌드한다.
+```typescript
+const debug1 = await new Promise((accept) => {
+  child_process.exec(`docker build . -t "${sha256_file}"`, {cwd: config("DOCKER_LOCATION") ? path.join(problem_dir, file, config("DOCKER_LOCATION")) : path.join(problem_dir, file)}, accept);
+});
+```
+
+## 오류보고
+빌드중 오류가 발생하면 해당 오류를 리포트하고 해당 문제를 제외한 다른 문제를 배포한다
+![img_1.png](img_1.png)
+
+# 반응
+![img_3.png](img_3.png)
+![img_4.png](img_4.png)
+~~설정이 복잡하다는데... 얼마나 간소화시킨건데!~~\
+전체적으로 반응은 좋았다.
+
+# 향후 계획
+.ctfdx.cfg의 설정이 부족하다는 피드백과, 더러운 코드 구조를 리팩토링 할 예정이다.
+
+이걸로 논문도 써봐야지 헿.
