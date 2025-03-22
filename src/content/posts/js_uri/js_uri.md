@@ -4,7 +4,7 @@ description: "Prototype pollution can cause Node.js’s internal module url's is
 published: 2025-03-22
 tags: ["node.js", "prototype pollution", "node.js internal"]
 category: hacking
-draft: true
+draft: false
 ---
 
 :::important
