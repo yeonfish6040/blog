@@ -58,7 +58,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
   avatar: 'assets/images/avatar.png',  // Relative to the /src directory. Relative to the /public directory if it starts with '/'
   name: 'yeonfish6040',
-  bio: 'I’m kinda wondering why people say frontend is easier than backend.',
+  bio: 'I’m kinda wondering why people say backend is red ocean.',
   links: [
     {
       name: 'Instagram',
