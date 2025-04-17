@@ -1,5 +1,5 @@
 ---
-title: "CTFdX"
+title: "[CTFdX] CTFd CI/CD automation tool"
 description: "the cicd solution for ctfd"
 published: 2025-03-21
 tags: [cicd, ctf]
