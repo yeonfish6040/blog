@@ -4,7 +4,7 @@ description: "풀업 저항과 풀다운 저항의 원리, 그리고 쓰임."
 published: 2025-06-17
 tags: [misc]
 category: chat
-draft: true
+draft: false
 ---
 
 # TL;DR
