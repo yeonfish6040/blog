@@ -3,7 +3,7 @@ title: "How prototype pollution works"
 description: "how to \"pollute prototype\""
 published: 2025-04-17
 tags: [node.js, prototype pollution]
-category: hscking
+category: hacking
 draft: false
 ---
 
