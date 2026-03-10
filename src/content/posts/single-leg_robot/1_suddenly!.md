@@ -1,7 +1,7 @@
 ---
 title: "발하나 - prologue"
 description: "본격적으로 구상하기전 이모저모"
-published: 2026-03-10
+published: 2026-03-09
 tags: [robotic]
 category: chat
 draft: false
