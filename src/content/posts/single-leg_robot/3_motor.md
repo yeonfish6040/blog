@@ -2,8 +2,8 @@
 title: "발하나 - ep.2"
 description: "이럴바에? 세상에 도움되는 짓 한스푼"
 published: 2026-03-11
-tags: [robotic]
-category: embedded
+tags: [robotic, conception]
+category: robotic
 draft: false
 ---
 

@@ -2,8 +2,8 @@
 title: "발하나 - ep.1"
 description: "구동계. 어떻게 설계하는게 좋을 것인가."
 published: 2026-03-10
-tags: [robotic]
-category: embedded
+tags: [robotic, conception]
+category: robotic
 draft: false
 ---
 
