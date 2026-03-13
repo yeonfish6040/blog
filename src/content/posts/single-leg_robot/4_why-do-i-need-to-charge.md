@@ -2,7 +2,7 @@
 title: "발하나 - ep.3"
 description: "꼭 스프링을 충전해서 써야 할까? - 구동계 구상 수정"
 published: 2026-03-12
-tags: [robotic, conception]
+tags: [robotic, conception, 발하나]
 category: robotic
 draft: false
 ---
