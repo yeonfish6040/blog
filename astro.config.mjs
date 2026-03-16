@@ -53,7 +53,16 @@ export default defineConfig({
       },
     }),
     svelte(),
-    sitemap(),
+    sitemap({
+      filter(page) {
+        const { pathname } = new URL(page);
+        return (
+          pathname === "/" ||
+          pathname === "/about/" ||
+          pathname.startsWith("/posts/")
+        );
+      },
+    }),
     Compress({
       CSS: false,
       Image: false,
