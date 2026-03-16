@@ -1,5 +1,5 @@
 ---
-title: "마라톤 prologue"
+title: "마라톤 - prologue"
 description: "구상"
 published: 2026-03-16
 tags: [embedded, marathon]
