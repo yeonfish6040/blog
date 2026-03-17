@@ -1,7 +1,7 @@
 ---
 title: "마라톤 - ep.1"
 description: "서버에 위치 업로드하는 사이클"
-published: 2026-03-16
+published: 2026-03-17
 tags: [embedded, marathon]
 category: developing
 draft: false
@@ -35,4 +35,5 @@ GNSS fix를 받고 LTE로 전송을 하는 사이클을 만들어야겠다!
 
 쉽네 ㅋ
 lte 연결 효율은 위해 PSM이 가능하면 동작할 수 있도록 구성하였다.
-ㅓ
+
+끗
