@@ -1,11 +1,11 @@
-```yaml
+---
 title: "로봇팔"
 description: "로봇팔만들기."
 published: 2026-05-19
 tags: [robotic, 로봇]
 category: chat
 draft: false
-```
+---
 
 # 사실
 fallback이다. 바로 점프로봇 만들기 전에 만만한거 하나 잡아서 순식간에 끝내고 
