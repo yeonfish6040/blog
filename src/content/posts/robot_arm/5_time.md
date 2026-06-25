@@ -1,7 +1,7 @@
 ---
 title: "로봇팔5"
 description: "시간이!!"
-published: 2026-05-19
+published: 2026-05-23
 tags: [robotic, 로봇팔]
 category: chat
 draft: false

@@ -1,7 +1,7 @@
 ---
 title: "로봇팔3"
 description: "돌리기3"
-published: 2026-05-19
+published: 2026-05-21
 tags: [robotic, 로봇팔]
 category: chat
 draft: false

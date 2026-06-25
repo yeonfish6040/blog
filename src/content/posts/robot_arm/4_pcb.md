@@ -1,7 +1,7 @@
 ---
 title: "로봇팔4"
 description: "pcb"
-published: 2026-05-19
+published: 2026-05-22
 tags: [robotic, 로봇팔]
 category: chat
 draft: false
