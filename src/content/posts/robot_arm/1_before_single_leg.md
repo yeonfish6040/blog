@@ -2,7 +2,7 @@
 title: "로봇팔"
 description: "로봇팔만들기."
 published: 2026-05-19
-tags: [robotic, 로봇]
+tags: [robotic, 로봇팔]
 category: chat
 draft: false
 ---
