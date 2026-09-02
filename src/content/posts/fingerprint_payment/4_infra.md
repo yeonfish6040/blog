@@ -1,5 +1,5 @@
 ---
-title: "지문결제 - 오마에 지문와 모 내꺼 데스"
+title: "지문결제 ep.4 - 오마에 지문와 모 내꺼 데스"
 description: "DB 분리, 등록/삭제 정책, DFU, 그리고 결과"
 published: 2026-09-02
 tags: [embedded, nRF54L15, DFU, MCUboot, infra]

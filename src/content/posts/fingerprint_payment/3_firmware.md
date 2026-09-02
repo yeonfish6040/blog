@@ -1,5 +1,5 @@
 ---
-title: "지문결제 - 이진화가 간단한게 아니었다고? 내가 할 수 있을리가 없잖아! 무리무리!"
+title: "지문결제 ep.3 - 이진화가 간단한게 아니었다고? 내가 할 수 있을리가 없잖아! 무리무리!"
 description: "데이터시트를 쓸거면 좀 그걸 읽고 알아 쳐먹을 수 있게 써주세요. 그리고 8bpp를 1bpp로 만들기"
 published: 2026-09-02
 tags: [embedded, nRF54L15, BLE, image processing]

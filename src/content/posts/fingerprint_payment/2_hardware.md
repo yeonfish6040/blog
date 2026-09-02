@@ -1,5 +1,5 @@
 ---
-title: "지문결제 - 보드설계"
+title: "지문결제 ep.2 - 보드설계"
 description: "센서 구하기, nRF54L15 보드 설계, Failed to power up DAP"
 published: 2026-09-02
 tags: [embedded, nRF54L15]
