@@ -165,6 +165,8 @@ const bannerOffset =
 		<script is:inline define:vars={{ artalkServer: 'https://comment.yeonfish.dev', artalkSite: siteConfig.title }}>
 			let artalkLoader;
 			let artalkInstance;
+			let artalkRoot;
+			let artalkCountSignature;
 			let artalkQueue = Promise.resolve();
 			const artalkThemeObserver = new MutationObserver(() => {
 				artalkInstance?.setDarkMode(document.documentElement.classList.contains('dark'));
@@ -191,11 +193,31 @@ const bannerOffset =
 					if (!root) {
 						artalkInstance?.destroy();
 						artalkInstance = undefined;
+						artalkRoot = undefined;
+						const countElements = [...document.querySelectorAll('.artalk-pv-count, .artalk-comment-count')];
+						const countSignature = countElements.map((element) => element.getAttribute('data-page-key')).join('|');
+						if (countSignature && artalkCountSignature !== countSignature) {
+							const Artalk = await loadArtalk();
+							if (document.querySelector('#Comments[data-artalk-page-key]')) return;
+							Artalk.loadCountWidget({
+								server: artalkServer,
+								site: artalkSite,
+								pvEl: '.artalk-pv-count',
+								countEl: '.artalk-comment-count',
+								statPageKeyAttr: 'data-page-key',
+							});
+							artalkCountSignature = countSignature;
+						} else if (!countSignature) {
+							artalkCountSignature = undefined;
+						}
 						return;
 					}
-					if (artalkInstance?.el === root) return;
+					if (artalkInstance && artalkRoot === root) return;
 
 					artalkInstance?.destroy();
+					artalkInstance = undefined;
+					artalkRoot = undefined;
+					artalkCountSignature = undefined;
 					const Artalk = await loadArtalk();
 					if (document.querySelector('#Comments[data-artalk-page-key]') !== root) return;
 					artalkInstance = Artalk.init({
@@ -206,8 +228,12 @@ const bannerOffset =
 						pageTitle: document.title,
 						locale: 'ko',
 						darkMode: document.documentElement.classList.contains('dark'),
-						pageVote: true,
+						pageVote: {
+							upBtnEl: '#artalk-page-vote-up',
+							upCountEl: '#artalk-page-vote-up-count',
+						},
 					});
+					artalkRoot = root;
 				}).catch((error) => {
 					console.error('Failed to load Artalk:', error);
 				});

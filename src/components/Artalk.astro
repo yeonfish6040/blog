@@ -5,12 +5,6 @@ const pageKey = Astro.url.pathname
 
 <link rel="stylesheet" href={`${server}/dist/Artalk.css`} />
 
-<div class="artalk-page-vote-row mb-6 flex justify-center">
-  <button type="button" class="artalk-page-vote-up text-black/75 dark:text-white/75" aria-label="이 글 좋아요">
-    ❤️ 좋아요 <span class="artalk-page-vote-up-count">0</span>
-  </button>
-</div>
-
 <div id="Comments" data-artalk-page-key={pageKey} class="mt-8"></div>
 
 <style is:global>
@@ -150,18 +144,20 @@ const pageKey = Astro.url.pathname
   }
 
   .artalk-page-vote-up {
-    border: 1px solid var(--line-divider);
-    border-radius: 9999px;
-    padding: 0.65rem 1.25rem;
-    background: var(--card-bg);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0;
+    color: inherit;
+    background: transparent;
+    border: 0;
     cursor: pointer;
-    transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+    transition: color 160ms ease, transform 160ms ease;
   }
 
   .artalk-page-vote-up:hover,
   .artalk-page-vote-up.active {
     color: var(--primary);
-    border-color: var(--primary);
   }
 
   .artalk-page-vote-up:active {

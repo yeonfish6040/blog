@@ -64,10 +64,18 @@ const { remarkPluginFrontmatter } = await entry.render()
         </div>
 
         <!-- word count and read time  -->
-        <div class="text-sm text-black/30 dark:text-white/30 flex gap-4 transition">
+        <div class="text-sm text-black/30 dark:text-white/30 flex items-center gap-4 transition">
             <div>{remarkPluginFrontmatter.words} {" " + i18n(I18nKey.wordsCount)}</div>
             <div>|</div>
             <div>{remarkPluginFrontmatter.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
+            <span class="inline-flex items-center gap-1" aria-label="조회수">
+                <Icon name="material-symbols:visibility-outline-rounded" class="text-base" />
+                <span class="artalk-pv-count tabular-nums" data-page-key={url}>0</span>
+            </span>
+            <span class="inline-flex items-center gap-1" aria-label="댓글 수">
+                <Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" />
+                <span class="artalk-comment-count tabular-nums" data-page-key={url}>0</span>
+            </span>
         </div>
 
     </div>

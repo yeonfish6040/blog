@@ -44,7 +44,7 @@ draft: false
 
 ## 💬 Artalk 조회수·좋아요·댓글
 
-글 페이지에 `https://comment.yeonfish.dev`의 Artalk 서버를 연결합니다. 서버에서 `https://yeonfish.dev`를 허용 도메인으로 등록하고, 사이트 이름은 블로그 설정의 `yeonfish`로 맞춰 주세요. 글에는 조회수·댓글 수와 좋아요 버튼이 표시되고, 댓글은 글 하단에서 작성할 수 있습니다.
+글 페이지에 `https://comment.yeonfish.dev`의 Artalk 서버를 연결합니다. 서버에서 `https://yeonfish.dev`를 허용 도메인으로 등록하고, 사이트 이름은 블로그 설정의 `yeonfish`로 맞춰 주세요. 목록 카드와 글 페이지에 조회수·댓글 수가 표시됩니다. 글 페이지의 추천 투표는 메타 정보 줄에 아이콘과 수로 나타나고, 댓글은 본문 아래에서 작성할 수 있습니다.
 
 ## 🧞 명령어
 

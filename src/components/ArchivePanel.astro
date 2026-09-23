@@ -4,6 +4,7 @@ import I18nKey from '../i18n/i18nKey'
 import { i18n } from '../i18n/translation'
 import { getSortedPosts } from '../utils/content-utils'
 import { getPostUrlBySlug } from '../utils/url-utils'
+import { Icon } from 'astro-icon/components'
 
 interface Props {
   keyword?: string
@@ -98,7 +99,7 @@ function formatTag(tag: string[]) {
                                 ></div>
                             </div>
                             <!-- post title -->
-                            <div class="w-[70%] md:max-w-[65%] md:w-[65%] text-left font-bold
+                            <div class="w-[70%] md:w-[50%] text-left font-bold
                                 group-hover:translate-x-1 transition-all group-hover:text-[var(--primary)]
                                 text-75 pr-8 whitespace-nowrap overflow-ellipsis overflow-hidden"
                             >
@@ -109,6 +110,16 @@ function formatTag(tag: string[]) {
                             whitespace-nowrap overflow-ellipsis overflow-hidden
                             text-30"
                             >{formatTag(post.data.tags)}</div>
+                            <div class="hidden md:flex md:w-[15%] items-center gap-3 text-xs text-30">
+                                <span class="inline-flex items-center gap-1" aria-label="조회수">
+                                    <Icon name="material-symbols:visibility-outline-rounded" class="text-base" />
+                                    <span class="artalk-pv-count tabular-nums" data-page-key={getPostUrlBySlug(post.slug)}>0</span>
+                                </span>
+                                <span class="inline-flex items-center gap-1" aria-label="댓글 수">
+                                    <Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" />
+                                    <span class="artalk-comment-count tabular-nums" data-page-key={getPostUrlBySlug(post.slug)}>0</span>
+                                </span>
+                            </div>
                         </div>
                     </a>
                 ))}

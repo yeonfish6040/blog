@@ -95,8 +95,12 @@ const jsonLd = {
             </div>
 
             <div class="onload-animation mb-5 flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400" aria-label="게시물 통계">
-                <span>조회 <span class="artalk-pv-count" data-page-key={Astro.url.pathname}>0</span></span>
-                <span>댓글 <span class="artalk-comment-count" data-page-key={Astro.url.pathname}>0</span></span>
+                <span class="inline-flex items-center gap-1"><Icon name="material-symbols:visibility-outline-rounded" class="text-base" /><span class="artalk-pv-count" data-page-key={Astro.url.pathname}>0</span></span>
+                <span class="inline-flex items-center gap-1"><Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" /><span class="artalk-comment-count" data-page-key={Astro.url.pathname}>0</span></span>
+                <button id="artalk-page-vote-up" type="button" class="artalk-page-vote-up" aria-label="이 글에 투표">
+                    <Icon name="material-symbols:thumb-up-outline-rounded" class="text-base" />
+                    <span id="artalk-page-vote-up-count" class="artalk-page-vote-up-count tabular-nums">0</span>
+                </button>
             </div>
 
             <!-- always show cover as long as it has one -->
