@@ -162,6 +162,65 @@ const bannerOffset =
 	>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
+		<script is:inline define:vars={{ artalkServer: 'https://comment.yeonfish.dev', artalkSite: siteConfig.title }}>
+			let artalkLoader;
+			let artalkInstance;
+			let artalkQueue = Promise.resolve();
+
+			function loadArtalk() {
+				if (window.Artalk) return Promise.resolve(window.Artalk);
+				if (!artalkLoader) {
+					artalkLoader = new Promise((resolve, reject) => {
+						const script = document.createElement('script');
+						script.src = `${artalkServer}/dist/Artalk.js`;
+						script.onload = () => resolve(window.Artalk);
+						script.onerror = reject;
+						document.head.appendChild(script);
+					});
+				}
+				return artalkLoader;
+			}
+
+			function mountArtalk() {
+				artalkQueue = artalkQueue.then(async () => {
+					const root = document.querySelector('#Comments[data-artalk-page-key]');
+					if (!root) {
+						artalkInstance?.destroy();
+						artalkInstance = undefined;
+						return;
+					}
+					if (artalkInstance?.el === root) return;
+
+					artalkInstance?.destroy();
+					const Artalk = await loadArtalk();
+					if (document.querySelector('#Comments[data-artalk-page-key]') !== root) return;
+					artalkInstance = Artalk.init({
+						el: root,
+						server: artalkServer,
+						site: artalkSite,
+						pageKey: root.dataset.artalkPageKey,
+						pageTitle: document.title,
+						locale: 'ko',
+						pageVote: true,
+					});
+				}).catch((error) => {
+					console.error('Failed to load Artalk:', error);
+				});
+				return artalkQueue;
+			}
+
+			function setupArtalk() {
+				if (window.swup?.hooks) window.swup.hooks.on('page:view', mountArtalk);
+				mountArtalk();
+			}
+
+			if (window.swup?.hooks) {
+				setupArtalk();
+			} else {
+				document.addEventListener('swup:enable', setupArtalk, { once: true });
+				mountArtalk();
+			}
+		</script>
 
 		<!-- increase the page height during page transition to prevent the scrolling animation from jumping -->
 		<div id="page-height-extend" class="hidden h-[300vh]"></div>

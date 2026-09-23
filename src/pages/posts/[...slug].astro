@@ -11,6 +11,7 @@ import { Icon } from 'astro-icon/components'
 import { licenseConfig } from 'src/config'
 import PostMetadata from '../../components/PostMeta.astro'
 import ImageWrapper from '../../components/misc/ImageWrapper.astro'
+import Artalk from '../../components/Artalk.astro'
 import { profileConfig, siteConfig } from '../../config'
 import { formatDateToYYYYMMDD } from '../../utils/date-utils'
 
@@ -93,6 +94,11 @@ const jsonLd = {
                 {!entry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
             </div>
 
+            <div class="onload-animation mb-5 flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400" aria-label="게시물 통계">
+                <span>조회 <span class="artalk-pv-count" data-page-key={Astro.url.pathname}>0</span></span>
+                <span>댓글 <span class="artalk-comment-count" data-page-key={Astro.url.pathname}>0</span></span>
+            </div>
+
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
@@ -103,6 +109,8 @@ const jsonLd = {
             <Markdown class="mb-6 markdown-content onload-animation">
                 <Content />
             </Markdown>
+
+            <Artalk />
 
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
