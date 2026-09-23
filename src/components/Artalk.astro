@@ -14,6 +14,141 @@ const pageKey = Astro.url.pathname
 <div id="Comments" data-artalk-page-key={pageKey} class="mt-8"></div>
 
 <style is:global>
+  .artalk,
+  .atk-layer-wrap {
+    --at-color-font: rgb(0 0 0 / 0.78);
+    --at-color-deep: rgb(0 0 0 / 0.9);
+    --at-color-sub: rgb(0 0 0 / 0.58);
+    --at-color-grey: rgb(0 0 0 / 0.52);
+    --at-color-meta: rgb(0 0 0 / 0.48);
+    --at-color-border: var(--line-divider);
+    --at-color-bg: var(--card-bg);
+    --at-color-bg-transl: var(--card-bg);
+    --at-color-bg-grey: var(--btn-regular-bg);
+    --at-color-bg-grey-transl: var(--btn-regular-bg);
+    --at-color-main: var(--primary);
+    --at-color-gradient: linear-gradient(180deg, transparent, var(--card-bg));
+  }
+
+  :root.dark .artalk,
+  :root.dark .atk-layer-wrap {
+    --at-color-font: rgb(255 255 255 / 0.78);
+    --at-color-deep: rgb(255 255 255 / 0.92);
+    --at-color-sub: rgb(255 255 255 / 0.62);
+    --at-color-grey: rgb(255 255 255 / 0.58);
+    --at-color-meta: rgb(255 255 255 / 0.5);
+  }
+
+  .artalk {
+    font-size: 0.95rem;
+  }
+
+  .artalk .atk-main-editor {
+    border-radius: var(--radius-large);
+    border-color: var(--line-divider);
+    margin-bottom: 1.25rem;
+  }
+
+  .artalk .atk-main-editor > .atk-header input {
+    border-radius: 0.65rem;
+  }
+
+  .artalk .atk-main-editor > .atk-header input:focus,
+  .artalk .atk-main-editor > .atk-textarea-wrap > .atk-textarea:focus {
+    border-color: var(--primary);
+  }
+
+  .artalk .atk-main-editor > .atk-textarea-wrap > .atk-textarea {
+    min-height: 7.5rem;
+  }
+
+  .artalk .atk-main-editor > .atk-bottom .atk-send-btn {
+    border-radius: 0.65rem;
+    background: var(--primary);
+  }
+
+  .artalk .atk-list > .atk-list-header {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .atk-layer-wrap .atk-layer-dialog-wrap {
+    background: rgb(8 10 18 / 0.62);
+    backdrop-filter: blur(6px);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog {
+    width: min(26rem, calc(100vw - 2rem)) !important;
+    overflow: hidden;
+    color: var(--at-color-font);
+    background: var(--card-bg);
+    border: 1px solid var(--line-divider);
+    border-radius: var(--radius-large);
+    box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 0.28);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-content {
+    padding: 1.5rem;
+    line-height: 1.6;
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-content .atk-captcha-img {
+    width: min(170px, 42%);
+    padding-right: 0.75rem;
+    border-right-color: var(--line-divider);
+    border-radius: 0.5rem;
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-content input {
+    height: 2.75rem;
+    margin-top: 0.75rem;
+    padding: 0 0.85rem;
+    color: var(--deep-text);
+    text-align: left;
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+    border-radius: 0.65rem;
+  }
+
+  :root.dark .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-content input {
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-content input:focus {
+    border-color: var(--primary);
+    outline: 2px solid color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-actions {
+    gap: 0.5rem;
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-actions button {
+    min-height: 2.65rem;
+    color: var(--primary);
+    background: var(--btn-regular-bg);
+    border-color: var(--line-divider);
+    border-radius: 0.65rem;
+    transition: background-color 150ms ease, transform 150ms ease;
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-actions button:hover {
+    background: var(--btn-regular-bg-hover);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-actions button:active {
+    color: white;
+    background: var(--primary);
+    transform: scale(0.98);
+  }
+
+  :root .atk-layer-dialog-wrap > .atk-layer-dialog > .atk-layer-dialog-actions button.error {
+    color: white;
+    background: #e5484d;
+    border-color: #e5484d;
+  }
+
   .artalk-page-vote-up {
     border: 1px solid var(--line-divider);
     border-radius: 9999px;

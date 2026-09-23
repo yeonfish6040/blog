@@ -166,6 +166,10 @@ const bannerOffset =
 			let artalkLoader;
 			let artalkInstance;
 			let artalkQueue = Promise.resolve();
+			const artalkThemeObserver = new MutationObserver(() => {
+				artalkInstance?.setDarkMode(document.documentElement.classList.contains('dark'));
+			});
+			artalkThemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
 			function loadArtalk() {
 				if (window.Artalk) return Promise.resolve(window.Artalk);
@@ -201,6 +205,7 @@ const bannerOffset =
 						pageKey: root.dataset.artalkPageKey,
 						pageTitle: document.title,
 						locale: 'ko',
+						darkMode: document.documentElement.classList.contains('dark'),
 						pageVote: true,
 					});
 				}).catch((error) => {
