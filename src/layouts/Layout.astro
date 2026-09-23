@@ -220,6 +220,9 @@ const bannerOffset =
 					artalkCountSignature = undefined;
 					const Artalk = await loadArtalk();
 					if (document.querySelector('#Comments[data-artalk-page-key]') !== root) return;
+					// Swup can restore a cached container after Artalk has already mutated it.
+					// Reset the dedicated mount point so a fresh instance cannot stack widgets.
+					root.replaceChildren();
 					artalkInstance = Artalk.init({
 						el: root,
 						server: artalkServer,
