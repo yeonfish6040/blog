@@ -229,12 +229,16 @@ const bannerOffset =
 						// Swup can restore a cached container after Artalk has already mutated it.
 						// Reset the dedicated mount point so a fresh instance cannot stack widgets.
 						root.replaceChildren();
+						const pageKey = root.dataset.artalkPageKey;
+						const pvCookie = `artalk_pv_${encodeURIComponent(pageKey)}`;
+						const hasViewedPage = document.cookie.split('; ').some((cookie) => cookie.startsWith(`${pvCookie}=`));
 						artalkInstance = Artalk.init({
 							el: root,
 							server: artalkServer,
 							site: artalkSite,
-							pageKey: root.dataset.artalkPageKey,
+							pageKey,
 							pageTitle: document.title,
+							pvAdd: !hasViewedPage,
 							locale: 'ko',
 							darkMode: document.documentElement.classList.contains('dark'),
 							pageVote: {
@@ -242,6 +246,7 @@ const bannerOffset =
 								upCountEl: '#artalk-page-vote-up-count',
 							},
 						});
+						document.cookie = `${pvCookie}=1; Max-Age=34560000; Path=${pageKey}; SameSite=Lax`;
 						artalkRoot = root;
 					}).catch((error) => {
 						console.error('Failed to load Artalk:', error);
