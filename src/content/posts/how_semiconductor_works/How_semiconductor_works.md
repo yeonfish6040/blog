@@ -5,64 +5,225 @@ published: 2025-04-07
 tags: [embedded, semiconductor, N type, P type]
 category: developing
 draft: false
+locales:
+  en:
+    title: "How semiconductor works."
+    description: "How do semiconductors actually work..."
 ---
 
+:::::locale{lang=ko}
 :::important
 이 블로그는 Ben eater와 Core dumped의 영상을 보고 해당 내용을 내가 이해한 내용을 바탕으로 재구성한 문서임을 밝힘.
 :::
+:::::
+
+:::::locale{lang=en}
+:::important
+Note: this post is my own reconstruction of what I understood after watching videos by Ben Eater and Core Dumped.
+:::
+:::::
 
 # tl;dr
+
+:::::locale{lang=ko}
 |     | N형 반도체       | P형 반도체          |
 |-----|--------------|-----------------|
 | 원소  | 인            | 붕소              |
 | 전하  | 음전하          | 양전하             |
 | 운반체 | **자유전자**가 이동 | 전자가 **정공**으로 점프 |
+:::::
 
+:::::locale{lang=en}
+|           | N-type semiconductor        | P-type semiconductor          |
+|-----------|-----------------------------|-------------------------------|
+| Element   | Phosphorus                  | Boron                         |
+| Charge    | Negative                    | Positive                      |
+| Carrier   | **Free electrons** drift    | Electrons hop into **holes**  |
+:::::
+
+:::::locale{lang=ko}
 - 두 반도체를 연결하고 N형에 음극을, P형에 양극을 연결하면 PN Junction이 앏아지며 결국에는 무너져 전자는 N에서 P의 방향으로 이동. 전류가 흐름.
 - 반대로 연결시 PN Junction의 Depletion이 넓어져 전자의 이동이 없어 전류가 흐르지 않음.
+:::::
+
+:::::locale{lang=en}
+- Join the two semiconductors and connect the negative terminal to the N side and the positive terminal to the P side: the PN junction thins out and eventually collapses, electrons move from N toward P, and current flows.
+- Wire it the other way around and the depletion region of the PN junction widens, so electrons don't move and no current flows.
+:::::
 
 # Introduction
+
+:::::locale{lang=ko}
 반도체는 도핑을 통해 2가지 종류로 나뉜다.. P-Type과 N-Type.
+:::::
 
+:::::locale{lang=en}
+Through doping, semiconductors split into two kinds: P-type and N-type.
+:::::
+
+:::::locale{lang=ko}
 각각은 기본적으로 실리콘으로 이루어진 물질에 어떤 원소가 포함되어있냐에 따라 나뉜다.
+:::::
 
+:::::locale{lang=en}
+Which one you get basically depends on which element is added to a silicon-based material.
+:::::
+
+:::::locale{lang=ko}
 # N-type semiconductor (N형 반도체)
+:::::
+
+:::::locale{lang=en}
+# N-type semiconductor
+:::::
+
+:::::locale{lang=ko}
 N형 반도체는 실리콘으로 이루어진 물질에 인이 포함되어있는 물질을 의미한다.
+:::::
+
+:::::locale{lang=en}
+An N-type semiconductor is a silicon-based material that contains phosphorus.
+:::::
+
 ![img.jpeg](img.jpeg)
+
+:::::locale{lang=ko}
 실리콘으로 이루어진 물질은 서로가 공유결합함으로써 자유전자가 거의 없어 부도체의 특성을 가진 물질이 된다.
 하지만 중간중간 전자의 개수가 5개인 인을 첨가함으로써 **잉여전자**가 만들어지고 해당 잉여전자는 물질을 자유롭게 돌아다닐 수 있다.
 이로써 해당 물질, 즉 N형 반도체는 **도전성**을 가지게 된다.
+:::::
 
+:::::locale{lang=en}
+In a silicon-based material the atoms covalently bond to each other, leaving almost no free electrons, so the material behaves like an insulator.
+But by mixing in phosphorus, which has five valence electrons, **surplus electrons** are created, and those surplus electrons can roam freely through the material.
+That gives the material — the N-type semiconductor — its **conductivity**.
+:::::
+
+:::::locale{lang=ko}
 :::note
 전자의 개수가 많아 음전하를 띄기에 N형 반도체라고 불린다.
 :::
+:::::
 
+:::::locale{lang=en}
+:::note
+It's called N-type because the extra electrons give it a negative charge.
+:::
+:::::
+
+:::::locale{lang=ko}
 # P-Type semiconductor (P형 반도체)
+:::::
+
+:::::locale{lang=en}
+# P-type semiconductor
+:::::
+
+:::::locale{lang=ko}
 P형 반도체는 실리콘으로 이루어진 물질에 붕소가 포함되어잇는 물질을 의미한다.
+:::::
+
+:::::locale{lang=en}
+A P-type semiconductor is a silicon-based material that contains boron.
+:::::
+
 ![img2.jpeg](img2.jpeg)
+
+:::::locale{lang=ko}
 N형 반도체의 경우와 같이, 실리콘으로 이루어진 물질은 서로가 공유결합함으로써 자유전자가 거의 없어 부도체의 특성을 가진 물질이 된다.
 하지만 중간중간 전자의 개수가 3개인 붕소을 첨가함으로써 **정공**이만들어지고 해당 정공에 다른 전자가 들어차고, 그로인해 생기는 또다른 정공에 다른 전자가 이동한다.
 이러한 방식으로 해당 물질, 즉 P형 반도체는 **도전성**을 갖는다.
+:::::
 
+:::::locale{lang=en}
+Just as with the N-type, a silicon-based material covalently bonds with itself, leaving almost no free electrons, so it behaves like an insulator.
+But by mixing in boron, which has three valence electrons, **holes** are created; another electron fills a hole, and yet another electron moves into the new hole that is left behind.
+In this way the material — the P-type semiconductor — gains its **conductivity**.
+:::::
+
+:::::locale{lang=ko}
 :::note
 전자의 개수가 적어 양전하를 띄기에 P형 반도체라고 불린다.
 :::
+:::::
 
+:::::locale{lang=en}
+:::note
+It's called P-type because having fewer electrons gives it a positive charge.
+:::
+:::::
+
+:::::locale{lang=ko}
 # 활용 (Diode)
-P형 반도체와 N형 반도체를 이용하면 전류를 한 방향으로 흐르게 만들어주는 다이오드를 만들 수 있다.
+:::::
 
+:::::locale{lang=en}
+# Putting it to use (the diode)
+:::::
+
+:::::locale{lang=ko}
+P형 반도체와 N형 반도체를 이용하면 전류를 한 방향으로 흐르게 만들어주는 다이오드를 만들 수 있다.
+:::::
+
+:::::locale{lang=en}
+With P-type and N-type semiconductors you can build a diode, which lets current flow in only one direction.
+:::::
+
+:::::locale{lang=ko}
 어떻게 하냐? 붙여버리면 된다!
+:::::
+
+:::::locale{lang=en}
+How? Just stick them together!
+:::::
 
 ## PN Diode
+
 ![img3.jpeg](img3.jpeg)
+
+:::::locale{lang=ko}
 두 반도체를 붙이면 N형 반도체의 자유전자가 P형 반도체의 정공으로 이동한다! 그로써 PN Junction (경계)를 중심으로
 Depletion(결핍 영역)이 발생하고 안정적인 중앙 영역이 생겨난다.
+:::::
 
+:::::locale{lang=en}
+When you join the two semiconductors, free electrons from the N-type move into the holes of the P-type! As a result, a depletion region forms around the PN junction (the boundary), creating a stable middle zone.
+:::::
+
+:::::locale{lang=ko}
 ## 전지를 연결한다면? (양극을 P형 반도체에)
+:::::
+
+:::::locale{lang=en}
+## What if we connect a battery? (positive terminal to the P-type)
+:::::
+
 ![img4.jpeg](img4.jpeg)
+
+:::::locale{lang=ko}
 전자가 N형 반도체로 이동하며 고갈영역을 자유전자가 채우고, P형 반도체부분의 전자가 전지로 이동하며 정공이 생긴다.
 이로인해 Depletion이 전압에따라 점점 줄어들게 된다. 그리고 전압이 특정 부분에 도달하는 순간 Depletion이 무너지며 전류가 흐르게 된다.
+:::::
 
+:::::locale{lang=en}
+Electrons move into the N-type and free electrons fill the depletion region, while electrons on the P-type side move into the battery, creating holes.
+As a result the depletion region shrinks as the voltage rises. And the moment the voltage reaches a certain point, the depletion region collapses and current flows.
+:::::
+
+:::::locale{lang=ko}
 ## 전지를 연결한다면? (양극을 N형 반도체에)
+:::::
+
+:::::locale{lang=en}
+## What if we connect a battery? (positive terminal to the N-type)
+:::::
+
 ![img5.jpeg](img5.jpeg)
+
+:::::locale{lang=ko}
 N형 반도체의 자유전자가 전지로 이동하고, P형 반도체에 정공에 자유전자가 들어차며 Depletion이 늘어나게 된다. 즉 이 상황에서는 전류를 흘리려고 해도 전류가 흐르지 않는다.
+:::::
+
+:::::locale{lang=en}
+Free electrons in the N-type move into the battery, and free electrons fill the holes in the P-type, so the depletion region widens. In other words, in this configuration no current flows no matter how hard you try to push it.
+:::::
