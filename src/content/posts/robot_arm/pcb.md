@@ -7,6 +7,7 @@ category: robotic
 draft: false
 ---
 
+::github{repo="yeonfish6040/step_controller"}
 :::tip
 Special thanks for [EasyEDA](https://easyeda.com) for CAD [JLCPCB](https://jlcpcb.com) for reliable PCBA
 :::
