@@ -38,7 +38,7 @@ Special thanks for [EasyEDA](https://easyeda.com) for CAD [JLCPCB](https://jlcpc
 :::::
 
 :::::locale{lang=en}
-Anyway, setting that aside — I'd bought nine TB6600s and was using them! But maybe because I bought them from a sketchy seller, they kept dying one by one! **Oh no!**\
+Anyway, setting that aside — I'd bought nine TB6600s and was using them! But maybe because I bought them from a sketchy seller, they kept dying one by one! **SHIT!**\
 So my stepper driver count kept shrinking, and on top of that the TB6600 was extremely inconvenient and annoying to power and wire up to a Nucleo-F446RE.
 :::::
 
