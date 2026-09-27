@@ -146,21 +146,85 @@ const pageKey = Astro.props.pageKey || Astro.url.pathname
   .artalk-page-vote-up {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0;
-    color: inherit;
-    background: transparent;
-    border: 0;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1.35rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--btn-regular-bg);
+    border: 1px solid var(--line-divider);
+    border-radius: 999px;
     cursor: pointer;
-    transition: color 160ms ease, transform 160ms ease;
+    transition: color 160ms ease, background-color 160ms ease,
+      border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
   }
 
-  .artalk-page-vote-up:hover,
-  .artalk-page-vote-up.active {
-    color: var(--primary);
+  .artalk-page-vote-up:hover {
+    background: var(--btn-regular-bg-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.1);
   }
 
   .artalk-page-vote-up:active {
+    transform: scale(0.97);
+    box-shadow: none;
+  }
+
+  .artalk-page-vote-up:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .artalk-page-vote-up.active {
+    color: white;
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+
+  .artalk-page-vote-up-icon {
+    font-size: 1.15rem;
+  }
+
+  .artalk-page-vote-up-count {
+    padding-left: 0.55rem;
+    border-left: 1px solid currentColor;
+    opacity: 0.75;
+  }
+
+  /* Compact mirror of the main like button, shown next to the view/comment stats. */
+  .post-vote-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.5rem;
+    color: inherit;
+    background: transparent;
+    border: 1px solid var(--line-divider);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease,
+      border-color 160ms ease, transform 160ms ease;
+  }
+
+  .post-vote-mini:hover {
+    color: var(--primary);
+    background: var(--btn-regular-bg-hover);
+    border-color: var(--primary);
+  }
+
+  .post-vote-mini:active {
     transform: scale(0.96);
+  }
+
+  .post-vote-mini:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+
+  .post-vote-mini.active {
+    color: white;
+    background: var(--primary);
+    border-color: var(--primary);
   }
 </style>

@@ -23,6 +23,16 @@ const { entry } = Astro.props
 const { Content, headings, remarkPluginFrontmatter } = await render(entry)
 const { locale, sourceLocale, slug, availableLocales } = entry.data
 const postPageKey = getPostUrlBySlug(slug)
+const likeCopyByLocale: Record<string, { prompt: string; label: string }> = {
+  ko: { prompt: '글이 도움이 되었나요?', label: '좋아요' },
+  en: { prompt: 'Did you find this post helpful?', label: 'Like' },
+  ja: { prompt: 'この記事は役に立ちましたか？', label: 'いいね' },
+  'zh-cn': { prompt: '这篇文章对你有帮助吗？', label: '点赞' },
+  'zh-tw': { prompt: '這篇文章對你有幫助嗎？', label: '按讚' },
+  es: { prompt: '¿Te ha resultado útil este artículo?', label: 'Me gusta' },
+  th: { prompt: 'บทความนี้มีประโยชน์ไหม', label: 'ถูกใจ' },
+}
+const likeCopy = likeCopyByLocale[locale] || likeCopyByLocale.en
 const localeNames: Record<string, string> = {
   ko: '한국어', en: 'English', ja: '日本語', 'zh-cn': '简体中文',
   'zh-tw': '繁體中文', es: 'Español', th: 'ไทย',
@@ -120,9 +130,9 @@ const jsonLd = {
             <div class="onload-animation mb-5 flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400" aria-label="게시물 통계">
                 <span class="inline-flex items-center gap-1"><Icon name="material-symbols:visibility-outline-rounded" class="text-base" /><span class="artalk-pv-count" data-page-key={postPageKey}>0</span></span>
                 <span class="inline-flex items-center gap-1"><Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" /><span class="artalk-comment-count" data-page-key={postPageKey}>0</span></span>
-                <button id="artalk-page-vote-up" type="button" class="artalk-page-vote-up" aria-label="이 글에 투표">
+                <button type="button" class="post-vote-mini" data-vote-proxy aria-label={likeCopy.label} title={likeCopy.label}>
                     <Icon name="material-symbols:thumb-up-outline-rounded" class="text-base" />
-                    <span id="artalk-page-vote-up-count" class="artalk-page-vote-up-count tabular-nums">0</span>
+                    <span class="tabular-nums" data-vote-proxy-count>0</span>
                 </button>
             </div>
 
@@ -136,6 +146,16 @@ const jsonLd = {
             <Markdown class="mb-6 markdown-content onload-animation">
                 <Content />
             </Markdown>
+
+            <!-- like -->
+            <div class="onload-animation flex flex-col items-center gap-2 py-8 border-[var(--line-divider)] border-dashed border-t-[1px]">
+                <div class="text-sm text-black/50 dark:text-white/50">{likeCopy.prompt}</div>
+                <button id="artalk-page-vote-up" type="button" class="artalk-page-vote-up" aria-label={likeCopy.label}>
+                    <Icon name="material-symbols:thumb-up-outline-rounded" class="artalk-page-vote-up-icon" />
+                    <span class="artalk-page-vote-up-label">{likeCopy.label}</span>
+                    <span id="artalk-page-vote-up-count" class="artalk-page-vote-up-count tabular-nums">0</span>
+                </button>
+            </div>
 
             <Artalk pageKey={postPageKey} />
 
