@@ -143,7 +143,7 @@ const pageKey = Astro.props.pageKey || Astro.url.pathname
     border-color: #e5484d;
   }
 
-  .artalk-page-vote-up {
+  .post-vote {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -160,39 +160,61 @@ const pageKey = Astro.props.pageKey || Astro.url.pathname
       border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
   }
 
-  .artalk-page-vote-up:hover {
+  .post-vote:hover {
     background: var(--btn-regular-bg-hover);
     transform: translateY(-1px);
     box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 0.1);
   }
 
-  .artalk-page-vote-up:active {
+  .post-vote:active {
     transform: scale(0.97);
     box-shadow: none;
   }
 
-  .artalk-page-vote-up:focus-visible {
+  .post-vote:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 
-  .artalk-page-vote-up.active {
+  .post-vote.active {
     color: white;
     background: var(--primary);
     border-color: var(--primary);
   }
 
-  .artalk-page-vote-up-icon {
+  .post-vote-icon {
     font-size: 1.15rem;
   }
 
-  .artalk-page-vote-up-count {
+  .post-vote-count {
     padding-left: 0.55rem;
     border-left: 1px solid currentColor;
     opacity: 0.75;
   }
 
-  /* Compact mirror of the main like button, shown next to the view/comment stats. */
+  .post-vote[aria-busy='true'],
+  .post-vote-mini[aria-busy='true'] {
+    pointer-events: none;
+    opacity: 0.65;
+  }
+
+  /* A like cannot be taken back, so the pressed state stops behaving like a control. */
+  .post-vote[aria-pressed='true'],
+  .post-vote-mini[aria-pressed='true'] {
+    cursor: default;
+  }
+
+  .post-vote[aria-pressed='true']:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .post-vote[aria-pressed='true']:active,
+  .post-vote-mini[aria-pressed='true']:active {
+    transform: none;
+  }
+
+  /* Compact variant of the like button, shown next to the view/comment stats. */
   .post-vote-mini {
     display: inline-flex;
     align-items: center;

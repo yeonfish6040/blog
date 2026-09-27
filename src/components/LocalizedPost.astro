@@ -130,9 +130,9 @@ const jsonLd = {
             <div class="onload-animation mb-5 flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400" aria-label="게시물 통계">
                 <span class="inline-flex items-center gap-1"><Icon name="material-symbols:visibility-outline-rounded" class="text-base" /><span class="artalk-pv-count" data-page-key={postPageKey}>0</span></span>
                 <span class="inline-flex items-center gap-1"><Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" /><span class="artalk-comment-count" data-page-key={postPageKey}>0</span></span>
-                <button type="button" class="post-vote-mini" data-vote-proxy aria-label={likeCopy.label} title={likeCopy.label}>
+                <button type="button" class="post-vote-mini" data-vote-button data-page-key={postPageKey} aria-pressed="false" aria-label={likeCopy.label} title={likeCopy.label}>
                     <Icon name="material-symbols:thumb-up-outline-rounded" class="text-base" />
-                    <span class="tabular-nums" data-vote-proxy-count>0</span>
+                    <span class="tabular-nums" data-vote-count data-page-key={postPageKey}>0</span>
                 </button>
             </div>
 
@@ -150,10 +150,10 @@ const jsonLd = {
             <!-- like -->
             <div class="onload-animation flex flex-col items-center gap-2 py-8 border-[var(--line-divider)] border-dashed border-t-[1px]">
                 <div class="text-sm text-black/50 dark:text-white/50">{likeCopy.prompt}</div>
-                <button id="artalk-page-vote-up" type="button" class="artalk-page-vote-up" aria-label={likeCopy.label}>
-                    <Icon name="material-symbols:thumb-up-outline-rounded" class="artalk-page-vote-up-icon" />
-                    <span class="artalk-page-vote-up-label">{likeCopy.label}</span>
-                    <span id="artalk-page-vote-up-count" class="artalk-page-vote-up-count tabular-nums">0</span>
+                <button type="button" class="post-vote" data-vote-button data-page-key={postPageKey} aria-pressed="false" aria-label={likeCopy.label}>
+                    <Icon name="material-symbols:thumb-up-outline-rounded" class="post-vote-icon" />
+                    <span class="post-vote-label">{likeCopy.label}</span>
+                    <span class="post-vote-count tabular-nums" data-vote-count data-page-key={postPageKey}>0</span>
                 </button>
             </div>
 

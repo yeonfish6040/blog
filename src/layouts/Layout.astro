@@ -193,73 +193,131 @@ const bannerOffset =
 					return artalkLoader;
 				}
 
-				// Artalk's pageVote binds a single element via querySelector, so any extra
-				// like button mirrors the bound one instead of talking to the API itself.
-				let voteProxyCleanup;
-				function syncVoteProxies() {
-					voteProxyCleanup?.();
-					voteProxyCleanup = undefined;
-					const primary = document.querySelector('#artalk-page-vote-up');
-					const primaryCount = document.querySelector('#artalk-page-vote-up-count');
-					const proxies = [...document.querySelectorAll('[data-vote-proxy]')];
-					if (!primary || !proxies.length) return;
+				// --- Likes -------------------------------------------------------------
+				// Artalk's vote API cannot tell visitors apart on this deployment (every
+				// anonymous vote collapses onto a single shared row), so likes are counted
+				// with Artalk's page-view counter instead: each post gets a companion page
+				// key `<post key>like` whose PV is the like total. PV only ever increments,
+				// so a like is one-way, and "did I like this" is tracked in a cookie.
+				const LIKED_COOKIE = 'blog_liked_pages';
+				const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+				const LIKED_LIMIT = 80;
+				const likeKeyOf = (pageKey) => `${pageKey}like`;
 
-					const apply = () => {
-						const count = primaryCount?.textContent?.trim();
-						const active = primary.classList.contains('active');
-						proxies.forEach((proxy) => {
-							const countEl = proxy.querySelector('[data-vote-proxy-count]');
-							if (countEl && count) countEl.textContent = count;
-							proxy.classList.toggle('active', active);
-							proxy.setAttribute('aria-pressed', String(active));
-						});
-					};
-					const onClick = (event) => {
-						event.preventDefault();
-						primary.click();
-					};
-
-					proxies.forEach((proxy) => proxy.addEventListener('click', onClick));
-					const observer = new MutationObserver(apply);
-					observer.observe(primary, { attributes: true, attributeFilter: ['class'] });
-					if (primaryCount) observer.observe(primaryCount, { childList: true, characterData: true, subtree: true });
-					apply();
-
-					voteProxyCleanup = () => {
-						observer.disconnect();
-						proxies.forEach((proxy) => proxy.removeEventListener('click', onClick));
-					};
+				function readCookie(name) {
+					const prefix = `${name}=`;
+					const hit = document.cookie.split('; ').find((entry) => entry.startsWith(prefix));
+					return hit ? decodeURIComponent(hit.slice(prefix.length)) : '';
+				}
+				function writeCookie(name, value) {
+					document.cookie = `${name}=${encodeURIComponent(value)}; Max-Age=${COOKIE_MAX_AGE}; Path=/; SameSite=Lax`;
+				}
+				function readLiked() {
+					try {
+						const parsed = JSON.parse(readCookie(LIKED_COOKIE) || '[]');
+						return new Set(Array.isArray(parsed) ? parsed.filter((k) => typeof k === 'string') : []);
+					} catch {
+						return new Set();
+					}
+				}
+				function markLiked(pageKey) {
+					const liked = readLiked();
+					liked.add(pageKey);
+					writeCookie(LIKED_COOKIE, JSON.stringify([...liked].slice(-LIKED_LIMIT)));
 				}
 
-				// Artalk exposes no bulk vote-count stat, so list pages resolve each page
-				// individually (limit=0 returns just the page object) and cache the result.
-				const voteCountCache = new Map();
-				function loadVoteCounts() {
-					const targets = [...document.querySelectorAll('.artalk-vote-up-count[data-page-key]')];
-					if (!targets.length) return;
-					const pending = [];
-					for (const target of targets) {
-						const pageKey = target.dataset.pageKey;
-						if (!pageKey) continue;
-						if (!voteCountCache.has(pageKey)) {
-							const url = `${artalkServer}/api/v2/comments?site_name=${encodeURIComponent(artalkSite)}`
-								+ `&page_key=${encodeURIComponent(pageKey)}&limit=0`;
-							voteCountCache.set(pageKey, fetch(url)
-								.then((response) => (response.ok ? response.json() : null))
-								.then((body) => body?.page?.vote_up ?? 0)
-								.catch(() => 0));
+				const likeCounts = new Map();
+				function paintLikes(pageKey) {
+					const liked = readLiked().has(pageKey);
+					const count = likeCounts.get(pageKey);
+					const selector = `[data-page-key="${CSS.escape(pageKey)}"]`;
+					if (count != null) {
+						for (const el of document.querySelectorAll(`[data-vote-count]${selector}`)) {
+							el.textContent = String(count);
 						}
-						pending.push(voteCountCache.get(pageKey).then((count) => {
-							target.textContent = String(count);
-						}));
 					}
-					return Promise.all(pending);
+					for (const el of document.querySelectorAll(`[data-vote-button]${selector}`)) {
+						el.classList.toggle('active', liked);
+						el.setAttribute('aria-pressed', String(liked));
+					}
+				}
+
+				let likeCleanup;
+				function setupLikes() {
+					likeCleanup?.();
+					likeCleanup = undefined;
+
+					const keys = new Set();
+					for (const el of document.querySelectorAll('[data-vote-count][data-page-key], [data-vote-button][data-page-key]')) {
+						if (el.dataset.pageKey) keys.add(el.dataset.pageKey);
+					}
+					if (!keys.size) return;
+					keys.forEach(paintLikes);
+
+					// page_pv takes many keys at once, so the whole list costs one request.
+					const missing = [...keys].filter((key) => !likeCounts.has(key));
+					if (missing.length) {
+						const url = `${artalkServer}/api/v2/stats/page_pv?site_name=${encodeURIComponent(artalkSite)}`
+							+ `&page_keys=${encodeURIComponent(missing.map(likeKeyOf).join(','))}`;
+						fetch(url)
+							.then((response) => (response.ok ? response.json() : null))
+							.then((body) => {
+								const data = body?.data || {};
+								for (const key of missing) {
+									likeCounts.set(key, Number(data[likeKeyOf(key)]) || 0);
+									paintLikes(key);
+								}
+							})
+							.catch(() => {});
+					}
+
+					const buttons = [...document.querySelectorAll('[data-vote-button][data-page-key]')];
+					const onClick = async (event) => {
+						const button = event.currentTarget;
+						const pageKey = button.dataset.pageKey;
+						// PV cannot be decremented, so a like is one-way.
+						if (!pageKey || readLiked().has(pageKey) || button.getAttribute('aria-busy') === 'true') return;
+						const group = buttons.filter((el) => el.dataset.pageKey === pageKey);
+						group.forEach((el) => el.setAttribute('aria-busy', 'true'));
+
+						// Optimistic: reflect the like immediately, roll back if the call fails.
+						const previous = likeCounts.get(pageKey);
+						markLiked(pageKey);
+						likeCounts.set(pageKey, (previous ?? 0) + 1);
+						paintLikes(pageKey);
+						try {
+							const response = await fetch(`${artalkServer}/api/v2/pages/pv`, {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({
+									page_key: likeKeyOf(pageKey),
+									page_title: `${document.title} (like)`,
+									site_name: artalkSite,
+								}),
+							});
+							const body = await response.json().catch(() => null);
+							if (!response.ok || typeof body?.pv !== 'number') throw new Error(body?.msg || 'like failed');
+							likeCounts.set(pageKey, body.pv);
+						} catch (error) {
+							if (previous == null) likeCounts.delete(pageKey);
+							else likeCounts.set(pageKey, previous);
+							const liked = readLiked();
+							liked.delete(pageKey);
+							writeCookie(LIKED_COOKIE, JSON.stringify([...liked]));
+							console.error('[like]', error);
+						} finally {
+							paintLikes(pageKey);
+							group.forEach((el) => el.removeAttribute('aria-busy'));
+						}
+					};
+
+					buttons.forEach((button) => button.addEventListener('click', onClick));
+					likeCleanup = () => buttons.forEach((button) => button.removeEventListener('click', onClick));
 				}
 
 				function mountArtalk() {
 					document.documentElement.lang = document.querySelector('[data-post-locale]')?.dataset.postLocale || siteLanguage;
-					syncVoteProxies();
-					loadVoteCounts();
+					setupLikes();
 					artalkQueue = artalkQueue.then(async () => {
 						const root = document.querySelector('#Comments[data-artalk-page-key]');
 						if (!root) {
@@ -307,10 +365,6 @@ const bannerOffset =
 							pvAdd: !hasViewedPage,
 							locale: document.documentElement.lang,
 							darkMode: document.documentElement.classList.contains('dark'),
-							pageVote: {
-								upBtnEl: '#artalk-page-vote-up',
-								upCountEl: '#artalk-page-vote-up-count',
-							},
 						});
 						document.cookie = `${pvCookie}=1; Max-Age=18000; Path=/; SameSite=Lax`;
 						artalkRoot = root;
