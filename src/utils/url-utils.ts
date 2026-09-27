@@ -16,6 +16,12 @@ export function getPostUrlBySlug(slug: string): string {
   return url(`/posts/${slug}/`)
 }
 
+export function getLocalizedPostUrl(slug: string, locale: string, sourceLocale: string): string {
+  return locale === sourceLocale
+    ? getPostUrlBySlug(slug)
+    : url(`/${locale}/posts/${slug}/`)
+}
+
 export function getCategoryUrl(category: string): string {
   if (category === i18n(i18nKey.uncategorized))
     return url('/archive/category/uncategorized/')

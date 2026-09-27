@@ -1,12 +1,12 @@
 ---
 import { getCollection } from 'astro:content'
-import LocalizedPost from '../../components/LocalizedPost.astro'
+import LocalizedPost from '../../../components/LocalizedPost.astro'
 
 export async function getStaticPaths() {
   const entries = await getCollection('posts', ({ data }) =>
-    data.locale === data.sourceLocale && (!import.meta.env.PROD || !data.draft))
+    data.locale !== data.sourceLocale && (!import.meta.env.PROD || !data.draft))
   return entries.map(entry => ({
-    params: { slug: entry.data.slug },
+    params: { locale: entry.data.locale, slug: entry.data.slug },
     props: { entry },
   }))
 }

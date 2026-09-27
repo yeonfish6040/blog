@@ -59,7 +59,7 @@ export default defineConfig({
         return (
           pathname === "/" ||
           pathname === "/about/" ||
-          pathname.startsWith("/posts/")
+          /^\/(?:[^/]+\/)?posts\//.test(pathname)
         );
       },
     }),

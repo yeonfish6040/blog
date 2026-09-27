@@ -162,7 +162,7 @@ const bannerOffset =
 	>
 		<ConfigCarrier></ConfigCarrier>
 		<slot />
-		<script is:inline define:vars={{ artalkServer: 'https://comment.yeonfish.dev', artalkSite: siteConfig.title }}>
+		<script is:inline define:vars={{ artalkServer: 'https://comment.yeonfish.dev', artalkSite: siteConfig.title, siteLanguage: siteConfig.lang.replace('_', '-') }}>
 			(() => {
 				const artalkControllerKey = Symbol.for('blog.artalk.controller');
 				if (window[artalkControllerKey]) {
@@ -194,6 +194,7 @@ const bannerOffset =
 				}
 
 				function mountArtalk() {
+					document.documentElement.lang = document.querySelector('[data-post-locale]')?.dataset.postLocale || siteLanguage;
 					artalkQueue = artalkQueue.then(async () => {
 						const root = document.querySelector('#Comments[data-artalk-page-key]');
 						if (!root) {
@@ -239,14 +240,14 @@ const bannerOffset =
 							pageKey,
 							pageTitle: document.title,
 							pvAdd: !hasViewedPage,
-							locale: 'ko',
+							locale: document.documentElement.lang,
 							darkMode: document.documentElement.classList.contains('dark'),
 							pageVote: {
 								upBtnEl: '#artalk-page-vote-up',
 								upCountEl: '#artalk-page-vote-up-count',
 							},
 						});
-						document.cookie = `${pvCookie}=1; Max-Age=18000; Path=${pageKey}; SameSite=Lax`;
+						document.cookie = `${pvCookie}=1; Max-Age=18000; Path=/; SameSite=Lax`;
 						artalkRoot = root;
 					}).catch((error) => {
 						console.error('Failed to load Artalk:', error);

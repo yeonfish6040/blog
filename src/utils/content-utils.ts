@@ -1,17 +1,14 @@
-import { getCollection } from 'astro:content'
-import type { BlogPostData } from '@/types/config'
+import { getCollection, type CollectionEntry } from 'astro:content'
 import I18nKey from '@i18n/i18nKey'
 import { i18n } from '@i18n/translation'
 
-export async function getSortedPosts(): Promise<
-  { body: string, data: BlogPostData; slug: string }[]
-> {
+export async function getSortedPosts(): Promise<CollectionEntry<'posts'>[]> {
   const allBlogPosts = (await getCollection('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
-  })) as unknown as { body: string, data: BlogPostData; slug: string }[]
+    return data.locale === data.sourceLocale && (!import.meta.env.PROD || data.draft !== true)
+  }))
 
   const sorted = allBlogPosts.sort(
-    (a: { data: BlogPostData }, b: { data: BlogPostData }) => {
+    (a, b) => {
       const dateA = new Date(a.data.published)
       const dateB = new Date(b.data.published)
       return dateA > dateB ? -1 : 1
@@ -19,11 +16,11 @@ export async function getSortedPosts(): Promise<
   )
 
   for (let i = 1; i < sorted.length; i++) {
-    sorted[i].data.nextSlug = sorted[i - 1].slug
+    sorted[i].data.nextSlug = sorted[i - 1].data.slug
     sorted[i].data.nextTitle = sorted[i - 1].data.title
   }
   for (let i = 0; i < sorted.length - 1; i++) {
-    sorted[i].data.prevSlug = sorted[i + 1].slug
+    sorted[i].data.prevSlug = sorted[i + 1].data.slug
     sorted[i].data.prevTitle = sorted[i + 1].data.title
   }
 
@@ -37,7 +34,7 @@ export type Tag = {
 
 export async function getTagList(): Promise<Tag[]> {
   const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
+    return data.locale === data.sourceLocale && (!import.meta.env.PROD || data.draft !== true)
   })
 
   const countMap: { [key: string]: number } = {}
@@ -63,7 +60,7 @@ export type Category = {
 
 export async function getCategoryList(): Promise<Category[]> {
   const allBlogPosts = await getCollection<'posts'>('posts', ({ data }) => {
-    return import.meta.env.PROD ? data.draft !== true : true
+    return data.locale === data.sourceLocale && (!import.meta.env.PROD || data.draft !== true)
   })
   const count: { [key: string]: number } = {}
   allBlogPosts.map((post: { data: { category: string | number } }) => {

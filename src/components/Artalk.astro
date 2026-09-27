@@ -1,6 +1,6 @@
 ---
 const server = 'https://comment.yeonfish.dev'
-const pageKey = Astro.url.pathname
+const pageKey = Astro.props.pageKey || Astro.url.pathname
 ---
 
 <link rel="stylesheet" href={`${server}/dist/Artalk.css`} />

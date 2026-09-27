@@ -45,9 +45,39 @@ image: ./cover.jpg
 tags: [Foo, Bar]
 category: Front-end
 draft: false
-lang: jp      # Set only if the post's language differs from the site's language in `config.ts`
+lang: ja      # Set only if the post's language differs from the site's language in `config.ts`
 ---
 ```
+
+## 🌐 Translated posts
+
+Use `locale` blocks to write multiple languages in one Markdown file. Text outside a locale block appears in every language. Posts without locale blocks continue to use their original language.
+
+```md
+---
+title: Building a Robot Arm
+published: 2026-09-27
+lang: en
+locales:
+  ko:
+    title: 로봇 팔 만들기
+    description: 한국어 소개
+---
+
+Shared content.
+
+:::::locale{lang=en}
+## Design
+English content.
+:::::
+
+:::::locale{lang=ko}
+## 설계
+한국어 본문입니다.
+:::::
+```
+
+The original post is generated at `/posts/<slug>/` and translations at `/<locale>/posts/<slug>/`. The post language selector links between them, and translated URLs are included in `sitemap.xml`. Comments and page views are shared between languages.
 
 ## 🧞 Commands
 

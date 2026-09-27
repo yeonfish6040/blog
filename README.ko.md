@@ -42,6 +42,36 @@ draft: false
 ---
 ```
 
+## 🌐 게시물 번역
+
+한 마크다운 파일에서 `locale` 블록으로 언어별 본문을 작성할 수 있습니다. 블록 밖의 내용은 모든 언어 페이지에 표시됩니다. 기존처럼 블록이 없는 글은 원래 언어의 글로 표시됩니다.
+
+```md
+---
+title: 로봇 팔 만들기
+published: 2026-09-27
+lang: ko
+locales:
+  en:
+    title: Building a Robot Arm
+    description: An English summary
+---
+
+두 언어에서 함께 보여줄 내용입니다.
+
+:::::locale{lang=ko}
+## 설계
+한국어 본문입니다.
+:::::
+
+:::::locale{lang=en}
+## Design
+English content.
+:::::
+```
+
+원문은 `/posts/<slug>/`, 번역본은 `/en/posts/<slug>/`에 생성됩니다. 게시물의 언어 선택기로 이동할 수 있으며 번역본 URL도 `sitemap.xml`에 포함됩니다. 댓글과 조회수는 같은 게시물의 모든 언어에서 공유합니다.
+
 ## 💬 Artalk 조회수·좋아요·댓글
 
 글 페이지에 `https://comment.yeonfish.dev`의 Artalk 서버를 연결합니다. 서버에서 `https://yeonfish.dev`를 허용 도메인으로 등록하고, 사이트 이름은 블로그 설정의 `yeonfish`로 맞춰 주세요. 목록 카드와 글 페이지에 조회수·댓글 수가 표시됩니다. 글 페이지의 추천 투표는 메타 정보 줄에 아이콘과 수로 나타나고, 댓글은 본문 아래에서 작성할 수 있습니다.
