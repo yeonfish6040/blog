@@ -68,6 +68,27 @@ const jsonLd = {
                     </div>
                     <div class="text-sm">{remarkPluginFrontmatter.minutes} {" " + i18n(I18nKey.minutesCount)}</div>
                 </div>
+                {availableLocales.length > 1 && (
+                    <div class="flex flex-row items-center ml-auto">
+                        <div class="transition h-6 w-6 rounded-md bg-black/5 dark:bg-white/10 text-black/50 dark:text-white/50 flex items-center justify-center mr-2">
+                            <Icon name="material-symbols:translate-rounded"></Icon>
+                        </div>
+                        <select
+                            id="post-locale"
+                            aria-label="Language"
+                            class="text-sm bg-transparent border-none outline-none cursor-pointer transition
+                                   text-black/30 dark:text-white/30 hover:text-[var(--primary)]
+                                   focus-visible:outline-2 focus-visible:outline-[var(--primary)] rounded-md"
+                            onchange="window.location.assign(this.value)"
+                        >
+                            {availableLocales.map(language => (
+                                <option value={getLocalizedPostUrl(slug, language, sourceLocale)} selected={language === locale}>
+                                    {localeNames[language] ? `${localeNames[language]} (${language})` : language}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
             </div>
 
             <!-- title -->
@@ -83,19 +104,6 @@ const jsonLd = {
                     {entry.data.title}
                 </div>
             </div>
-
-            {availableLocales.length > 1 && (
-                <div class="onload-animation mb-4 flex items-center gap-2 text-sm text-75">
-                    <label for="post-locale">언어</label>
-                    <select id="post-locale" class="btn-regular rounded-lg px-2 py-1" onchange="window.location.assign(this.value)">
-                        {availableLocales.map(language => (
-                            <option value={getLocalizedPostUrl(slug, language, sourceLocale)} selected={language === locale}>
-                                {localeNames[language] || language}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
 
             <!-- metadata -->
             <div class="onload-animation">
