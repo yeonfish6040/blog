@@ -7,10 +7,10 @@ category: robotic
 draft: false
 ---
 
-::github{repo="yeonfish6040/step_controller"}
 :::tip
 Special thanks for [EasyEDA](https://easyeda.com) for CAD [JLCPCB](https://jlcpcb.com) for reliable PCBA
 :::
+::github{repo="yeonfish6040/step_controller"}
 
 # 신뢰성 있고 고도로 통합된 스텝드라이버의 필요 
 ~~근데 내가 만든 스텝드라이버를 신뢰성 있다고 생각해도 될까~~
