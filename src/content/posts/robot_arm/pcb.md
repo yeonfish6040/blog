@@ -951,3 +951,13 @@ The idea is to let each axis handle encoder input and pulse generation on its ow
 :::::locale{lang=en}
 I'd like to build, at some point, an architecture where encoder reads and timer parameter adjustments can happen perfectly simultaneously.
 :::::
+
+:::::locale{lang=ko}
+# 참고한 데이터시트들
+:::::
+
+:::::locale{lang=en}
+# Datasheet references
+:::::
+
+![img.png](img.png)
