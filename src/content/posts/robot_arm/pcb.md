@@ -87,6 +87,12 @@ The initial requirements were roughly these.
 :::::
 
 ![pcb.jpg](pcb.jpg)
+:::::locale{lang=ko}
+~~AI 아님~~
+:::::
+:::::locale{lang=en}
+Not an AI...
+:::::
 ![pcb_overview.png](pcb_overview.png)
 
 :::::locale{lang=ko}
