@@ -4,7 +4,7 @@ description: "Typeorm을 사용할때 자동으로 db에 스키마 변경사항�
 published: 2025-04-03
 tags: [node.js, typeorm]
 category: developing
-draft: false
+draft: true
 locales:
   en:
     title: "Automated Typeorm Schema Migration."
