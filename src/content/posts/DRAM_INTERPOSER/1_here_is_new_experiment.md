@@ -11,6 +11,11 @@ locales:
     description: "Concept - connect - exploit?"
 ---
 
+:::info
+내 연구 노트들 싹 취합해서 만들어진 ai-written post임 \
+동아리에 연구자료 하나 내야하는데 적합한거 찾아쓰기 귀찮아서 진행중인걸로 넣었음
+:::
+
 # DRAM Interposer - Dram Page Cache Manipulate
 
 :::::locale{lang=ko}
