@@ -78,7 +78,7 @@ function formatTag(tag: string[]) {
                     <div class="w-[70%] md:w-[80%] transition text-left text-50">{group.posts.length} {i18n(I18nKey.postsCount)}</div>
                 </div>
                 {group.posts.map(post => (
-                    <a href={getPostUrlBySlug(post.slug)}
+                    <a href={getPostUrlBySlug(post.data.slug)}
                        aria-label={post.data.title}
                        class="group btn-plain !block h-10 w-full rounded-lg hover:text-[initial]"
                     >
@@ -113,15 +113,15 @@ function formatTag(tag: string[]) {
                             <div class="hidden md:flex md:w-[15%] items-center gap-3 text-xs text-30">
                                 <span class="inline-flex items-center gap-1" aria-label="조회수">
                                     <Icon name="material-symbols:visibility-outline-rounded" class="text-base" />
-                                    <span class="artalk-pv-count tabular-nums" data-page-key={getPostUrlBySlug(post.slug)}>0</span>
+                                    <span class="artalk-pv-count tabular-nums" data-page-key={getPostUrlBySlug(post.data.slug)}>0</span>
                                 </span>
                                 <span class="inline-flex items-center gap-1" aria-label="댓글 수">
                                     <Icon name="material-symbols:mode-comment-outline-rounded" class="text-base" />
-                                    <span class="artalk-comment-count tabular-nums" data-page-key={getPostUrlBySlug(post.slug)}>0</span>
+                                    <span class="artalk-comment-count tabular-nums" data-page-key={getPostUrlBySlug(post.data.slug)}>0</span>
                                 </span>
                                 <span class="inline-flex items-center gap-1" aria-label="좋아요 수">
                                     <Icon name="material-symbols:thumb-up-outline-rounded" class="text-base" />
-                                    <span class="artalk-vote-up-count tabular-nums" data-page-key={getPostUrlBySlug(post.slug)}>0</span>
+                                    <span class="artalk-vote-up-count tabular-nums" data-page-key={getPostUrlBySlug(post.data.slug)}>0</span>
                                 </span>
                             </div>
                         </div>
